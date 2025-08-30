@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>Fomu ya Maombi ya Mkopo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ Important for responsiveness -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
-<div class="max-w-5xl mx-auto bg-white shadow-lg p-8 rounded-lg mt-6">
+<div class="max-w-5xl mx-auto bg-white shadow-lg p-4 sm:p-6 md:p-8 rounded-lg mt-6">
   <h2 class="text-2xl font-bold mb-2 text-indigo-600 text-center">Fomu ya Maombi ya Mkopo</h2>
 
   <!-- WhatsApp Notice -->
-  <p class="text-center text-green-600 font-bold mb-6 flex justify-center items-center gap-2">
+  <p class="text-center text-green-600 font-bold mb-6 flex flex-col sm:flex-row justify-center items-center gap-2 text-sm sm:text-base">
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="w-6 h-6">
     Kwa msaada zaidi, tuma WhatsApp: 
     <a href="https://wa.me/255786542628" target="_blank" class="underline text-blue-600 font-bold">255786542628</a>
   </p>
 
   <!-- Confirmation Message -->
-  <div id="confirmation" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
+  <div id="confirmation" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 text-sm sm:text-base" role="alert">
     Maombi yako yamepokelewa kikamilifu!
   </div>
 
@@ -26,7 +27,7 @@
     <!-- 1. Taarifa ya Mteja -->
     <div>
       <h3 class="text-lg font-semibold text-gray-700 mb-4">1. Taarifa ya Mteja</h3>
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> <!-- ✅ Responsive grid -->
         <div>
           <input type="text" id="jina_kwanza" name="jina_kwanza" placeholder="Jina la Kwanza" class="border rounded p-2 w-full">
           <p id="error_jina_kwanza" class="text-red-600 text-sm mt-1 hidden"></p>
@@ -101,15 +102,15 @@
       <textarea name="ndugu[1]" placeholder="Jina Kamili, Mahusiano, Makazi, Mawasiliano" class="border rounded p-2 w-full mt-2"></textarea>
     </div>
 
-    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700">
+    <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700">
       Tuma Maombi
     </button>
   </form>
 </div>
 
 <!-- WhatsApp Floating Icon -->
-<a href="https://wa.me/255786542628" target="_blank" class="fixed bottom-5 right-5 bg-green-500 p-4 rounded-full shadow-lg hover:bg-green-600 transition duration-300">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="w-6 h-6" alt="WhatsApp">
+<a href="https://wa.me/255786542628" target="_blank" class="fixed bottom-5 right-5 bg-green-500 p-3 sm:p-4 rounded-full shadow-lg hover:bg-green-600 transition duration-300">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="w-5 h-5 sm:w-6 sm:h-6" alt="WhatsApp">
 </a>
 
 <script>

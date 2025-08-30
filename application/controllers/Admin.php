@@ -2469,6 +2469,11 @@ public function disburse($loan_id){
           $customer_data = $this->queries->get_customerData($customer_id);
           $phones = $customer_data->phone_no;
           $old_balance = $datas_balance->balance;
+
+
+        //      print_r($customer_data);
+        //  exit();
+        
          
           $balance = $old_balance;
           $with_balance = $balance - $new_balance; 
@@ -2484,8 +2489,9 @@ public function disburse($loan_id){
           $today = date("Y-m-d H:i");
 
         
-          $sms = "Habari {$customer_data->f_name} {$customer_data->l_name}, 
-mkopo wako wa TZS {$remain_balance} umetumwa kikamilifu. 
+      $today = date('d-m-Y'); // au 'Y-m-d' kulingana na format unayotaka
+$sms = "Habari {$customer_data->f_name} {$customer_data->l_name}, 
+mkopo wako wa TZS {$input_balance} umetumwa kikamilifu tarehe {$today} na umepokelewa na {$comp_data->comp_name}. 
 Tafadhali tumia fedha hizi kwa shughuli zenye tija ili kuongeza kipato na kulipa marejesho kwa wakati.";
 
           $massage = $sms;
@@ -2626,7 +2632,7 @@ Tafadhali tumia fedha hizi kwa shughuli zenye tija ili kuongeza kipato na kulipa
 
           $instalment = $day * $renew_loan;
          
-        // print_r($loan_aprove);
+        // print_r( $company_data);
         //          exit();
          //company loan fee setting
          $comp_fee = $this->queries->get_loanfee_categoryData($comp_id);
@@ -2695,8 +2701,11 @@ Tafadhali tumia fedha hizi kwa shughuli zenye tija ili kuongeza kipato na kulipa
 
       $today = date('d-m-Y'); // au 'Y-m-d' kulingana na format unayotaka
 $sms = "Habari {$customer_data->f_name} {$customer_data->l_name}, 
-mkopo wako wa TZS {$input_balance} umetumwa kikamilifu tarehe {$today}. 
+mkopo wako wa TZS {$input_balance} umetumwa kikamilifu tarehe {$today} na umepokelewa na {$comp_data->comp_name}. 
 Tafadhali tumia fedha hizi kwa shughuli zenye tija ili kuongeza kipato na kulipa marejesho kwa wakati.";
+
+          //  print_r($sms);
+          //           exit();
 
           $massage = $sms;
           $phone = $phones;
@@ -3201,10 +3210,11 @@ Tafadhali tumia fedha hizi kwa shughuli zenye tija ili kuongeza kipato na kulipa
 
            //send sms function
 
-         $sms = 'Habari ' . $customer_data->f_name . ' ' . $customer_data->l_name .
-       ', mkopo wako wa TZS ' . $loan_aproved. 
-       ' umetumwa kikamilifu. Tafadhali tumia fedha hizi kwa shughuli zenye tija ili kuongeza kipato na kulipa marejesho kwa wakati. ' .
-       'Kwa msaada zaidi piga simu namba ' . $company_data->comp_phone . '.';
+            $today = date('d-m-Y'); // au 'Y-m-d' kulingana na format unayotaka
+$sms = "Habari {$customer_data->f_name} {$customer_data->l_name}, 
+mkopo wako wa TZS {$input_balance} umetumwa kikamilifu tarehe {$today} na umepokelewa na {$comp_data->comp_name}. 
+Tafadhali tumia fedha hizi kwa shughuli zenye tija ili kuongeza kipato na kulipa marejesho kwa wakati.";
+
 
          $massage = $sms;
          $phone = $phones;
