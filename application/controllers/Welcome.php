@@ -62,71 +62,156 @@ class Welcome extends CI_Controller {
 
 
 
-    public function save() {
-        $this->load->library('form_validation');
-
-        // Validation rules
-        $this->form_validation->set_rules('jina_kwanza', 'Jina la Kwanza', 'required|alpha');
-        $this->form_validation->set_rules('jina_kati', 'Jina la Kati', 'required|alpha');
-        $this->form_validation->set_rules('jina_mwisho', 'Jina la Mwisho', 'required|alpha');
-        $this->form_validation->set_rules('simu', 'Simu', 'required|regex_match[/^(?:0|255)[0-9]{8}$/]');
-
-        if ($this->form_validation->run() == FALSE) {
-            $errors = [
-                'jina_kwanza' => form_error('jina_kwanza'),
-                'jina_kati' => form_error('jina_kati'),
-                'jina_mwisho' => form_error('jina_mwisho'),
-                'simu' => form_error('simu')
-            ];
-            echo json_encode(['success' => false, 'errors' => $errors]);
-            return;
-        }
-
-        // Prepare data
-        $data = [
-            'jina_kwanza' => $this->input->post('jina_kwanza'),
-            'jina_kati' => $this->input->post('jina_kati'),
-            'jina_mwisho' => $this->input->post('jina_mwisho'),
-            'jina_maarufu' => $this->input->post('jina_maarufu'),
-            'namba_kitambulisho' => $this->input->post('namba_kitambulisho'),
-            'tarehe_kuzaliwa' => $this->input->post('tarehe_kuzaliwa'),
-            'jinsia' => $this->input->post('jinsia'),
-            'hali_ndoa' => $this->input->post('hali_ndoa'),
-            'idadi_watoto' => $this->input->post('idadi_watoto'),
-            'idadi_wategemezi' => $this->input->post('idadi_wategemezi'),
-            'jina_mwenza' => $this->input->post('jina_mwenza'),
-            'namba_nida' => $this->input->post('namba_nida'),
-            'simu' => $this->input->post('simu'),
-            'elimu' => $this->input->post('elimu'),
-            'anuani_posta' => $this->input->post('anuani_posta'),
-            'makazi_dumu' => $this->input->post('makazi_dumu'),
-            'anuani_biashara' => $this->input->post('anuani_biashara'),
-            'shina_mjumbe' => $this->input->post('shina_mjumbe'),
-            'mtaa' => $this->input->post('mtaa'),
-            'kata' => $this->input->post('kata'),
-            'aina_biashara' => $this->input->post('aina_biashara'),
-            'manunuzi_mwezi' => $this->input->post('manunuzi_mwezi'),
-            'mauzo_mwezi' => $this->input->post('mauzo_mwezi'),
-            'kodi_biashara' => $this->input->post('kodi_biashara'),
-            'faida_mwezi' => $this->input->post('faida_mwezi'),
-            'matumizi_familia' => $this->input->post('matumizi_familia'),
-            'mapato_jumla' => $this->input->post('mapato_jumla'),
-            'vyanzo_ziada' => $this->input->post('vyanzo_ziada'),
-            'matumizi_jumla' => $this->input->post('matumizi_jumla'),
-            'kiasi_mkopo' => $this->input->post('kiasi_mkopo'),
-            'lengo_mkopo' => $this->input->post('lengo_mkopo'),
-            'idadi_mikopo' => $this->input->post('idadi_mikopo'),
-            'mikopo_json' => json_encode($this->input->post('mikopo')),
-            'dhamana_json' => json_encode($this->input->post('dhamana')),
-            'ndugu_json' => json_encode($this->input->post('ndugu')),
-            'created_at' => date('Y-m-d H:i:s')
-        ];
-
-        $this->db->insert('loan_applications', $data);
-
-        echo json_encode(['success' => true]);
+	public function loan_list()
+    {
+		   $this->load->model('queries');
+        $data['records'] = $this->queries->all(100, 0);
+        $this->load->view('home/loan_list', $data);
     }
 
+
+	    public function create()
+    {
+        $this->load->view('home/loanform');
+    }
+
+
+	public function formreceived()
+	{
+		$this->load->view("home/formaccept");
+	}
+
+
+	   public function show($id)
+    {
+        $data = $this->Loans->find($id);
+        if (!$data) show_404();
+
+        // Tumia view yako ndefu (iliyotupa) kama "loans/show.php"
+        $this->load->view('admin/show', $data);
+    }
+
+
+	 public function pdf($id)
+    {
+        $data = $this->Loans->find($id);
+        if (!$data) show_404();
+
+        $html = $this->load->view('loans/show', $data, TRUE);
+
+        // mPDF (hakikisha Composer autoload iko sawa)
+        $mpdf = new \Mpdf\Mpdf(['format' => 'A4']);
+        $mpdf->WriteHTML($html);
+        $filename = 'Fomu_Maombi_'.$id.'.pdf';
+        $mpdf->Output($filename, 'D'); // download moja kwa moja
+    }
+
+
+	public function store()
+    {
+        // ====== VALIDATION (hakuna JS, ni server-side) ======
+        $this->form_validation->set_rules('first_name', 'Jina la Kwanza', 'required|trim');
+        $this->form_validation->set_rules('last_name', 'Jina la Mwisho', 'required|trim');
+        $this->form_validation->set_rules('id_number', 'Kitambulisho', 'required|trim');
+        $this->form_validation->set_rules('phone', 'Simu', 'required|trim');
+        $this->form_validation->set_rules('amount_requested', 'Kiasi cha Mkopo', 'required|numeric');
+
+        if ($this->form_validation->run() === FALSE) {
+            return $this->create(); // rudisha form na errors
+        }
+
+        // ====== KUJENGA DATA KUU ======
+        $app = [
+            'first_name'         => $this->input->post('first_name', TRUE),
+            'middle_name'        => $this->input->post('middle_name', TRUE),
+            'last_name'          => $this->input->post('last_name', TRUE),
+            'nickname'           => $this->input->post('nickname', TRUE),
+            'id_number'          => $this->input->post('id_number', TRUE),
+            'dob'                => $this->input->post('dob', TRUE) ?: null,
+            'gender'             => $this->input->post('gender', TRUE),
+            'marital_status'     => $this->input->post('marital_status', TRUE),
+            'children_count'     => (int)$this->input->post('children_count'),
+            'dependents_count'   => (int)$this->input->post('dependents_count'),
+            'spouse_name'        => $this->input->post('spouse_name', TRUE),
+            'spouse_nida'        => $this->input->post('spouse_nida', TRUE),
+            'phone'              => $this->input->post('phone', TRUE),
+            'education_level'    => $this->input->post('education_level', TRUE),
+            'phone_alt'          => $this->input->post('phone_alt', TRUE),
+            'postal_address'     => $this->input->post('postal_address', TRUE),
+            'permanent_residence'=> $this->input->post('permanent_residence', TRUE),
+            'business_address'   => $this->input->post('business_address', TRUE),
+            'shina'              => $this->input->post('shina', TRUE),
+            'mtaa'               => $this->input->post('mtaa', TRUE),
+            'kata'               => $this->input->post('kata', TRUE),
+            'residence_address'  => $this->input->post('residence_address', TRUE),
+
+            'business_type'      => $this->input->post('business_type', TRUE),
+            'monthly_purchases'  => (float)$this->input->post('monthly_purchases'),
+            'monthly_sales'      => (float)$this->input->post('monthly_sales'),
+            'business_tax'       => (float)$this->input->post('business_tax'),
+            'monthly_profit'     => (float)$this->input->post('monthly_profit'),
+            'family_expenses'    => (float)$this->input->post('family_expenses'),
+            'other_expenses'     => (float)$this->input->post('other_expenses'),
+            'total_income'       => (float)$this->input->post('total_income'),
+            'additional_sources' => $this->input->post('additional_sources', TRUE),
+            'total_expenses'     => (float)$this->input->post('total_expenses'),
+
+            'amount_requested'   => (float)$this->input->post('amount_requested'),
+            'loan_purpose'       => $this->input->post('loan_purpose', TRUE),
+
+            'loans_count'        => (int)$this->input->post('loans_count'),
+            'loans_amount'       => (float)$this->input->post('loans_amount'),
+            'loans_date'         => $this->input->post('loans_date', TRUE) ?: null,
+            'loans_company'      => $this->input->post('loans_company', TRUE),
+
+            'oath_text'          => $this->input->post('oath_text', TRUE),
+        ];
+
+        // ====== RELATIVES (2), GUARANTORS (2), COLLATERALS (7) ======
+        $relatives = [];
+        for ($i=1; $i<=2; $i++) {
+            $relatives[] = [
+                'full_name' => $this->input->post("relative{$i}_name", TRUE),
+                'relation'  => $this->input->post("relative{$i}_relation", TRUE),
+                'residence' => $this->input->post("relative{$i}_residence", TRUE),
+                'contact'   => $this->input->post("relative{$i}_contact", TRUE),
+            ];
+        }
+
+        $guarantors = [];
+        for ($i=1; $i<=2; $i++) {
+            $guarantors[] = [
+                'full_name'            => $this->input->post("guarantor{$i}_name", TRUE),
+                'relation_to_applicant'=> $this->input->post("guarantor{$i}_relation", TRUE),
+                'years_known'          => $this->input->post("guarantor{$i}_years_known", TRUE),
+                'job_title'            => $this->input->post("guarantor{$i}_job", TRUE),
+                'years_at_residence'   => $this->input->post("guarantor{$i}_years_resident", TRUE),
+                'home_address'         => $this->input->post("guarantor{$i}_home_address", TRUE),
+                'business_address'     => $this->input->post("guarantor{$i}_business_address", TRUE),
+                'signature_text'       => $this->input->post("guarantor{$i}_signature", TRUE),
+                'signed_date'          => $this->input->post("guarantor{$i}_date", TRUE) ?: null,
+            ];
+        }
+
+        $collaterals = [];
+        for ($i=1; $i<=7; $i++) {
+            $collaterals[] = [
+                'item_type'     => $this->input->post("col{$i}_type", TRUE),
+                'purchase_price'=> (float)$this->input->post("col{$i}_purchase"),
+                'market_price'  => (float)$this->input->post("col{$i}_market"),
+                'auction_price' => (float)$this->input->post("col{$i}_auction"),
+            ];
+        }
+	    $this->load->model('queries');
+        $loan_id = $this->queries->create($app, $relatives, $guarantors, $collaterals);
+        if (!$loan_id) {
+            $this->session->set_flashdata('error', 'Imeshindikana kuhifadhi. Jaribu tena.');
+            return redirect('welcome/create');
+        }
+
+        $this->session->set_flashdata('success', 'Maombi yamehifadhiwa kikamilifu.');
+        redirect('welcome/formreceived');
+    }
 
 
    // user sing in

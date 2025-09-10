@@ -400,6 +400,8 @@ $company = $this->queries->get_comp_data($comp_id);
                                     <li><a href="javascript:;">Via Email</a></li>
                                 </ul>
                             </li>
+
+                             <li><a href="<?php echo base_url("admin/new_loans"); ?>"><i class="icon-size-actual"></i>New Loan Requests</a></li>
                         </ul>
                     </nav>
                     <br><br><br><br>

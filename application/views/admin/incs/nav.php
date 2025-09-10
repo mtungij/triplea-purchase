@@ -1,5 +1,17 @@
 <div id="wrapper">
 
+<?php
+$CI =& get_instance();
+$CI->load->model('queries');
+
+// idadi ya maombi yote
+$total_notifications = $CI->queries->count_all();
+
+// maombi 5 ya mwisho
+$notifications = $CI->queries->all(5);
+?>
+
+
     <nav class="navbar navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-btn">
@@ -27,68 +39,59 @@
                         <li>
                             <a href="javascript:;" class="icon-menu d-none d-sm-block"><i class="icon-envelope"></i><span class="notification-dot"></span></a>
                         </li>
-                        <li class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-                                <i class="icon-bell"></i>
-                                <span class="notification-dot"></span>
-                            </a>
-                            <ul class="dropdown-menu notifications">
-                                <li class="header"><strong>You have 4 new Notifications</strong></li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <i class="icon-info text-warning"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <p class="text">Campaign <strong>Holiday Sale</strong> is nearly reach budget limit.</p>
-                                                <span class="timestamp">10:00 AM Today</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>                               
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <i class="icon-like text-success"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <p class="text">Your New Campaign <strong>Holiday Sale</strong> is approved.</p>
-                                                <span class="timestamp">11:30 AM Today</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                 <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <i class="icon-pie-chart text-info"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <p class="text">Website visits from Twitter is 27% higher than last week.</p>
-                                                <span class="timestamp">04:00 PM Today</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <i class="icon-info text-danger"></i>
-                                            </div>
-                                            <div class="media-body">
-                                                <p class="text">Error on website analytics configurations</p>
-                                                <span class="timestamp">Yesterday</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="footer"><a href="javascript:void(0);" class="more">See all notifications</a></li>
-                            </ul>
-                        </li>
+                   <li class="dropdown">
+    <a href="javascript:void(0);" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+        <i class="icon-bell"></i>
+        <?php if ($total_notifications > 0): ?>
+            <span class="badge badge-danger"><?= $total_notifications ?></span>
+        <?php endif; ?>
+    </a>
+    <ul class="dropdown-menu notifications">
+        <li class="header">
+            <strong>Una jumla ya <?= $total_notifications ?> taarifa mpya</strong>
+        </li>
+
+        <?php if (!empty($notifications)): ?>
+            <?php foreach ($notifications as $n): ?>
+                <li>
+                    <a href="javascript:void(0);">
+                        <div class="media">
+                            <div class="media-left">
+                                <i class="icon-info text-warning"></i>
+                            </div>
+                            <div class="media-body">
+                                <p class="text">
+                                    Ombi jipya la mkopo kutoka 
+                                    <strong><?= htmlspecialchars($n->first_name . ' ' . $n->last_name, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                    kiasi: <strong><?= number_format($n->amount_requested, 2) ?> TZS</strong>
+                                </p>
+                                <span class="timestamp">
+                                    <?= date("d M Y H:i", strtotime($n->created_at)) ?>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li>
+                <a href="javascript:void(0);">
+                    <div class="media">
+                        <div class="media-body">
+                            <p class="text text-muted">Hakuna taarifa mpya</p>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <li class="footer">
+            <a href="<?= site_url('admin/new_loans') ?>" class="more">Angalia taarifa zote</a>
+        </li>
+    </ul>
+</li>
+
+
                         <li class="dropdown">
                             <a href="javascript:void(0);" class="dropdown-toggle icon-menu" data-toggle="dropdown"><i class="icon-equalizer"></i></a>
                             <ul class="dropdown-menu user-menu menu-icon">

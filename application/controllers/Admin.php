@@ -17,6 +17,45 @@ class Admin extends CI_Controller {
 	}
 
 
+  public function notifications()
+{
+   	$this->load->model('queries');
+    
+    $data['total_notifications'] = $this->queries->count_all(); 
+    $data['notifications'] = $this->queries->all(5); // changanya 5 za mwisho tu
+    
+        $this->load->view('admin/incs/nav', $data);
+}
+
+public function new_loans()
+{
+     $this->load->model('queries');
+        $data['records'] = $this->queries->all(100, 0);
+        $this->load->view('admin/loan_list', $data);
+}
+
+public function print_pdf($id)
+{
+    // Load the record from database
+    $record = $this->Loan_model->get_record($id);
+
+    if (!$record) {
+        show_404();
+    }
+
+    // Load the view as HTML string
+    $html = $this->load->view('admin/pdf_template', ['record' => $record], true);
+
+    // Load mPDF library
+    $mpdf = new \Mpdf\Mpdf();
+
+    // Write HTML to PDF
+    $mpdf->WriteHTML($html);
+
+    // Output PDF to browser (force download)
+    $mpdf->Output("loan_$id.pdf", \Mpdf\Output\Destination::DOWNLOAD);
+}
+
 	public function sub_admin(){
 		$this->load->model('queries');
 		$this->load->view('admin/sub_admin');
