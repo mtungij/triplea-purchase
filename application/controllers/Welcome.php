@@ -107,111 +107,67 @@ class Welcome extends CI_Controller {
     }
 
 
-	public function store()
-    {
-        // ====== VALIDATION (hakuna JS, ni server-side) ======
-        $this->form_validation->set_rules('first_name', 'Jina la Kwanza', 'required|trim');
-        $this->form_validation->set_rules('last_name', 'Jina la Mwisho', 'required|trim');
-        $this->form_validation->set_rules('id_number', 'Kitambulisho', 'required|trim');
-        $this->form_validation->set_rules('phone', 'Simu', 'required|trim');
-        $this->form_validation->set_rules('amount_requested', 'Kiasi cha Mkopo', 'required|numeric');
+public function store()
+{
+    // 1. Validation
+    $this->form_validation->set_rules('first_name', 'Jina la Kwanza', 'required|trim');
+    $this->form_validation->set_rules('last_name', 'Jina la Mwisho', 'required|trim');
+    $this->form_validation->set_rules('phone', 'Simu', 'required|trim');
+    $this->form_validation->set_rules('amount_requested', 'Kiasi cha Mkopo', 'required|numeric');
 
-        if ($this->form_validation->run() === FALSE) {
-            return $this->create(); // rudisha form na errors
-        }
-
-        // ====== KUJENGA DATA KUU ======
-        $app = [
-            'first_name'         => $this->input->post('first_name', TRUE),
-            'middle_name'        => $this->input->post('middle_name', TRUE),
-            'last_name'          => $this->input->post('last_name', TRUE),
-            'nickname'           => $this->input->post('nickname', TRUE),
-            'id_number'          => $this->input->post('id_number', TRUE),
-            'dob'                => $this->input->post('dob', TRUE) ?: null,
-            'gender'             => $this->input->post('gender', TRUE),
-            'marital_status'     => $this->input->post('marital_status', TRUE),
-            'children_count'     => (int)$this->input->post('children_count'),
-            'dependents_count'   => (int)$this->input->post('dependents_count'),
-            'spouse_name'        => $this->input->post('spouse_name', TRUE),
-            'spouse_nida'        => $this->input->post('spouse_nida', TRUE),
-            'phone'              => $this->input->post('phone', TRUE),
-            'education_level'    => $this->input->post('education_level', TRUE),
-            'phone_alt'          => $this->input->post('phone_alt', TRUE),
-            'postal_address'     => $this->input->post('postal_address', TRUE),
-            'permanent_residence'=> $this->input->post('permanent_residence', TRUE),
-            'business_address'   => $this->input->post('business_address', TRUE),
-            'shina'              => $this->input->post('shina', TRUE),
-            'mtaa'               => $this->input->post('mtaa', TRUE),
-            'kata'               => $this->input->post('kata', TRUE),
-            'residence_address'  => $this->input->post('residence_address', TRUE),
-
-            'business_type'      => $this->input->post('business_type', TRUE),
-            'monthly_purchases'  => (float)$this->input->post('monthly_purchases'),
-            'monthly_sales'      => (float)$this->input->post('monthly_sales'),
-            'business_tax'       => (float)$this->input->post('business_tax'),
-            'monthly_profit'     => (float)$this->input->post('monthly_profit'),
-            'family_expenses'    => (float)$this->input->post('family_expenses'),
-            'other_expenses'     => (float)$this->input->post('other_expenses'),
-            'total_income'       => (float)$this->input->post('total_income'),
-            'additional_sources' => $this->input->post('additional_sources', TRUE),
-            'total_expenses'     => (float)$this->input->post('total_expenses'),
-
-            'amount_requested'   => (float)$this->input->post('amount_requested'),
-            'loan_purpose'       => $this->input->post('loan_purpose', TRUE),
-
-            'loans_count'        => (int)$this->input->post('loans_count'),
-            'loans_amount'       => (float)$this->input->post('loans_amount'),
-            'loans_date'         => $this->input->post('loans_date', TRUE) ?: null,
-            'loans_company'      => $this->input->post('loans_company', TRUE),
-
-            'oath_text'          => $this->input->post('oath_text', TRUE),
-        ];
-
-        // ====== RELATIVES (2), GUARANTORS (2), COLLATERALS (7) ======
-        $relatives = [];
-        for ($i=1; $i<=2; $i++) {
-            $relatives[] = [
-                'full_name' => $this->input->post("relative{$i}_name", TRUE),
-                'relation'  => $this->input->post("relative{$i}_relation", TRUE),
-                'residence' => $this->input->post("relative{$i}_residence", TRUE),
-                'contact'   => $this->input->post("relative{$i}_contact", TRUE),
-            ];
-        }
-
-        $guarantors = [];
-        for ($i=1; $i<=2; $i++) {
-            $guarantors[] = [
-                'full_name'            => $this->input->post("guarantor{$i}_name", TRUE),
-                'relation_to_applicant'=> $this->input->post("guarantor{$i}_relation", TRUE),
-                'years_known'          => $this->input->post("guarantor{$i}_years_known", TRUE),
-                'job_title'            => $this->input->post("guarantor{$i}_job", TRUE),
-                'years_at_residence'   => $this->input->post("guarantor{$i}_years_resident", TRUE),
-                'home_address'         => $this->input->post("guarantor{$i}_home_address", TRUE),
-                'business_address'     => $this->input->post("guarantor{$i}_business_address", TRUE),
-                'signature_text'       => $this->input->post("guarantor{$i}_signature", TRUE),
-                'signed_date'          => $this->input->post("guarantor{$i}_date", TRUE) ?: null,
-            ];
-        }
-
-        $collaterals = [];
-        for ($i=1; $i<=7; $i++) {
-            $collaterals[] = [
-                'item_type'     => $this->input->post("col{$i}_type", TRUE),
-                'purchase_price'=> (float)$this->input->post("col{$i}_purchase"),
-                'market_price'  => (float)$this->input->post("col{$i}_market"),
-                'auction_price' => (float)$this->input->post("col{$i}_auction"),
-            ];
-        }
-	    $this->load->model('queries');
-        $loan_id = $this->queries->create($app, $relatives, $guarantors, $collaterals);
-        if (!$loan_id) {
-            $this->session->set_flashdata('error', 'Imeshindikana kuhifadhi. Jaribu tena.');
-            return redirect('welcome/create');
-        }
-
-        $this->session->set_flashdata('success', 'Maombi yamehifadhiwa kikamilifu.');
-        redirect('welcome/formreceived');
+    if ($this->form_validation->run() === FALSE) {
+        return $this->create();
     }
+
+    // 2. Applicant main info
+    $app = [
+        'first_name'       => $this->input->post('first_name', TRUE),
+        'middle_name'      => $this->input->post('middle_name', TRUE),
+        'last_name'        => $this->input->post('last_name', TRUE),
+        'id_number'        => $this->input->post('id_number', TRUE),
+        'dob'              => $this->input->post('dob', TRUE) ?: null,
+        'gender'           => $this->input->post('gender', TRUE),
+        'children_count'   => (int)$this->input->post('children_count'),
+        'dependents_count' => (int)$this->input->post('dependents_count'),
+		'my_investment'    =>  $this->input->post('my_investment', TRUE),
+        'phone'            => $this->input->post('phone', TRUE),
+        'education_level'  => $this->input->post('education_level', TRUE),
+        'business_type'    => $this->input->post('business_type', TRUE),
+        'business_sector'  => $this->input->post('business_sector', TRUE),
+        'current_income'   => (float)$this->input->post('current_income'),
+        'monthly_expenses' => (float)$this->input->post('monthly_expenses'),
+        'loan_collateral'  => $this->input->post('loan_collateral', TRUE),
+        'amount_requested' => (float)$this->input->post('amount_requested'),
+        'loan_purpose'     => $this->input->post('loan_purpose', TRUE),
+    ];
+
+    // 3. Loans (dynamic array)
+    $loans = $this->input->post('loans') ?? [];
+
+    // 4. Next of kin (dynamic array)
+    $kins = $this->input->post('kins') ?? [];
+
+
+// 	echo '<pre>';
+// print_r($app);
+// print_r($loans);
+// print_r($kins);
+// exit;
+
+
+    // 5. Save
+    $this->load->model('queries');
+    $loan_id = $this->queries->create($app, $loans, $kins);
+
+    if (!$loan_id) {
+        $this->session->set_flashdata('error', 'Imeshindikana kuhifadhi. Jaribu tena.');
+        return redirect('welcome/create');
+    }
+
+    $this->session->set_flashdata('success', 'Maombi yamehifadhiwa kikamilifu.');
+    redirect('welcome/formreceived');
+}
+
 
 
    // user sing in

@@ -94,38 +94,38 @@ public function remove_share_capital($capital_id){
 }
 
 
-public function create($data, $relatives = [], $guarantors = [], $collaterals = [])
-    {
-        $this->db->trans_start();
+public function create($app, $loans, $kins)
+{
+    // Insert main applicant
+    $this->db->insert('loan_applications', $app);
+    $loan_id = $this->db->insert_id();
 
-        $this->db->insert('loan_applications', $data);
-        $loan_id = $this->db->insert_id();
-
-        foreach ($relatives as $i => $r) {
-            if (empty($r['full_name'])) continue;
-            $r['loan_application_id'] = $loan_id;
-            $r['idx'] = $i + 1;
-            $this->db->insert('loan_relatives', $r);
-        }
-
-        foreach ($guarantors as $i => $g) {
-            if (empty($g['full_name'])) continue;
-            $g['loan_application_id'] = $loan_id;
-            $g['idx'] = $i + 1;
-            $this->db->insert('loan_guarantors', $g);
-        }
-
-        foreach ($collaterals as $i => $c) {
-            if (empty($c['item_type'])) continue;
-            $c['loan_application_id'] = $loan_id;
-            $c['idx'] = $i + 1;
-            $this->db->insert('loan_collaterals', $c);
-        }
-
-        $this->db->trans_complete();
-        if ($this->db->trans_status() === FALSE) return FALSE;
-        return $loan_id;
+    // Insert loans
+    foreach ($loans as $loan) {
+        $loan_data = [
+            'loan_id'  => $loan_id, // foreign key
+            'count'    => $loan['count'],
+            'company'  => $loan['company'],
+            'amount'   => $loan['amount'],
+            'end_date' => $loan['end_date'],
+        ];
+        $this->db->insert('loan_details', $loan_data);
     }
+
+    // Insert next-of-kin / guarantors
+    foreach ($kins as $kin) {
+        $kin_data = [
+            'loan_id'   => $loan_id, // foreign key
+            'name'      => $kin['name'],
+            'phone'     => $kin['phone'],
+            'relation'  => $kin['relation'],
+            'residence' => $kin['residence'],
+        ];
+        $this->db->insert('kin_details', $kin_data);
+    }
+
+    return $loan_id;
+}
 
     public function all($limit = 50, $offset = 0)
     {
@@ -137,16 +137,31 @@ public function create($data, $relatives = [], $guarantors = [], $collaterals = 
     return $this->db->count_all('loan_applications');
 }
 
+// public function get_record($id)
+// {
+//     return $this->db->get_where('loan_applications', ['id' => $id])->row();
+// }
 
-    public function find($id)
-    {
-        $app = $this->db->get_where('loan_applications', ['id'=>$id])->row();
-        if (!$app) return null;
-        $rel = $this->db->order_by('idx')->get_where('loan_relatives', ['loan_application_id'=>$id])->result();
-        $gua = $this->db->order_by('idx')->get_where('loan_guarantors', ['loan_application_id'=>$id])->result();
-        $col = $this->db->order_by('idx')->get_where('loan_collaterals', ['loan_application_id'=>$id])->result();
-        return ['app'=>$app, 'relatives'=>$rel, 'guarantors'=>$gua, 'collaterals'=>$col];
-    }
+
+public function delete_loanapp($id) {
+    return $this->db->delete('loan_applications', ['id' => $id]);
+}
+
+   public function get_record($id)
+{
+    $data = [];
+
+    // Main applicant
+    $data['app'] = $this->db->get_where('loan_applications', ['id' => $id])->row();
+
+    // Loans
+    $data['loans'] = $this->db->get_where('loan_details', ['loan_id' => $id])->result();
+
+    // Next-of-kin
+    $data['relatives'] = $this->db->get_where('kin_details', ['loan_id' => $id])->result();
+
+    return $data;
+}
 
 
 

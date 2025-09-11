@@ -36,25 +36,54 @@ public function new_loans()
 
 public function print_pdf($id)
 {
+    $this->load->model('queries');
+    
     // Load the record from database
-    $record = $this->Loan_model->get_record($id);
+    $record = $this->queries->get_record($id);
 
     if (!$record) {
         show_404();
     }
 
-    // Load the view as HTML string
+    // Load view as HTML
     $html = $this->load->view('admin/pdf_template', ['record' => $record], true);
 
-    // Load mPDF library
+    // Initialize mPDF
     $mpdf = new \Mpdf\Mpdf();
 
-    // Write HTML to PDF
+    // Write HTML
     $mpdf->WriteHTML($html);
 
-    // Output PDF to browser (force download)
-    $mpdf->Output("loan_$id.pdf", \Mpdf\Output\Destination::DOWNLOAD);
+    // Open in browser instead of downloading
+    $mpdf->Output("loan_{$record['app']->id}.pdf", \Mpdf\Output\Destination::INLINE);
 }
+
+
+
+ public function delete_loanapp($id = null) {
+        if (!$id) {
+            $this->session->set_flashdata('massage', 'Invalid request!');
+            redirect('admin/new_loans'); // Adjust this to your loan list page
+        }
+          $this->load->model('queries');
+        // Check if record exists
+        $record = $this->queries->get_record($id);
+        if (!$record) {
+            $this->session->set_flashdata('massage', 'Record not found!');
+            redirect('admin/new_loans');
+        }
+
+        // Perform delete
+        $deleted = $this->queries->delete_loanapp($id); // You will create this function in the model
+        if ($deleted) {
+            $this->session->set_flashdata('massage', 'Record deleted successfully.');
+        } else {
+            $this->session->set_flashdata('massage', 'Failed to delete record.');
+        }
+
+        redirect('admin/new_loans'); // Redirect back to the loan list
+    }
+
 
 	public function sub_admin(){
 		$this->load->model('queries');
