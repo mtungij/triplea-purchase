@@ -23,57 +23,78 @@
 </head>
 <body>
 <div class="container">
-    <div class="logo">
-        <img src="https://i.ibb.co/9g3v2cv/logo.png" alt="Tripple Finance Limited"/>
-    </div>
+  <!-- <div class="logo">
+    <img src="/assets/img/4.jpg" alt="Tripple Finance Limited"/>
+</div>
+<div class="logo">
+    <img src="/assets/img/4.jpg" alt="TRIPLE A MICROFINANCE LIMITED"/>
+</div> -->
+
+<!-- Company Title -->
+<div style="text-align: center; font-weight: bold; font-size: 13px; line-height: 1.4; margin-bottom: 8px;">
+    TRIPLE A MICROFINANCE LIMITED <br/>
+    P.O.BOX 1234, DAR ES SALAAM - TANZANIA <br/>
+    SIMU: 0786 542 628 
+</div>
+
+
 
     <div class="header-title">FOMU YA MAOMBI YA MKOPO</div>
     <div style="text-align: right; font-weight: bold; margin-bottom: 5px">
-        NB: Sehemu Zote Zijazwe Kwa Kalamu ya Bluu na Herufi Kubwa
+        <!-- NB: Sehemu Zote Zijazwe Kwa Kalamu ya Bluu na Herufi Kubwa -->
     </div>
 
     <!-- 1. TAARIFA YA MTEJA -->
-    <div class="section-title">1. TAARIFA YA MTEJA</div>
-    <table class="outer-bordered-table">
-        <tr>
-            <td colspan="4">Jina Kamili (kama lilivyo kwenye kitambulisho)</td>
-        </tr>
-        <tr>
-            <td><?= $record['app']->first_name ?></td>
-            <td><?= $record['app']->middle_name ?></td>
-            <td><?= $record['app']->last_name ?></td>
-            <td><?= $record['app']->nickname ?? '' ?></td>
-        </tr>
-        <tr>
-            <td><?= $record['app']->id_number ?></td>
-            <td><?= $record['app']->dob ?></td>
-            <td><?= $record['app']->gender ?></td>
-            <td><?= $record['app']->marital_status ?></td>
-        </tr>
-        <tr>
-            <td><?= $record['app']->children_count ?></td>
-            <td colspan="2"><?= $record['app']->dependents_count ?></td>
-            <td><?= $record['app']->spouse_name ?? '' ?></td>
-        </tr>
-        <tr>
-            <td><?= $record['app']->spouse_nida ?? '' ?></td>
-            <td><?= $record['app']->phone ?></td>
-            <td colspan="2"><?= $record['app']->phone_alt ?? '' ?></td>
-        </tr>
-        <tr>
-            <td><?= $record['app']->education_level ?></td>
-            <td colspan="3"><?= $record['app']->postal_address ?? '' ?></td>
-        </tr>
-        <tr>
-            <td><?= $record['app']->permanent_residence ?? '' ?></td>
-            <td><?= $record['app']->business_address ?? '' ?></td>
-            <td><?= $record['app']->shina ?? '' ?></td>
-            <td><?= $record['app']->mtaa ?? '' ?></td>
-        </tr>
-    </table>
+    <!-- 1. TAARIFA YA MTEJA -->
+<div class="section-title">1. TAARIFA YA MTEJA</div>
+<table class="outer-bordered-table">
+    <tr>
+        <th>JINA LA KWANZA</th>
+        <th>JINA LA KATI</th>
+        <th>JINA LA MWISHO</th>
+       
+    </tr>
+<tr>
+    <td><?= strtoupper($record['app']->first_name) ?></td>
+    <td><?= strtoupper($record['app']->middle_name) ?></td>
+    <td><?= strtoupper($record['app']->last_name) ?></td>
+</tr>
+
+    <tr>
+        <th>IDADI YA WATOTO</th>
+         <th>IDADI YA WATEGEMEZI</th>
+        <th>NAMBA YA SIMU</th>
+       
+    </tr>
+    <tr>
+      
+       
+       <td><?= $record['app']->children_count ?></td>
+        <td><?= $record['app']->dependents_count ?></td>
+         <td><?= $record['app']->phone ?></td>
+    </tr>
+    
+ 
+       
+       
+    </tr>
+    <!-- <tr>
+        <th>Makazi ya Kudumu</th>
+        <th>Anuani ya Biashara</th>
+        <th>Shina</th>
+        <th>Mtaa</th>
+    </tr>
+    <tr>
+        <td><?= $record['app']->permanent_residence ?? '' ?></td>
+        <td><?= $record['app']->business_address ?? '' ?></td>
+        <td><?= $record['app']->shina ?? '' ?></td>
+        <td><?= $record['app']->mtaa ?? '' ?></td>
+    </tr> -->
+</table>
+
 
     <!-- 2. TAARIFA YA BIASHARA -->
-    <div class="section-title">2. TAARIFA YA BIASHARA</div>
+    <!-- <div class="section-title">2. TAARIFA YA BIASHARA</div>
     <table class="outer-bordered-table">
         <tr>
             <td>Aina ya Biashara</td>
@@ -105,10 +126,10 @@
             <td>Jumla ya Matumizi</td>
             <td colspan="2"><?= number_format($record['app']->total_expenses, 2) ?></td>
         </tr>
-    </table>
+    </table> -->
 
     <!-- 3. LENGO LA MKOPO -->
-    <div class="section-title">3. LENGO LA MKOPO</div>
+    <div class="section-title">3. TAARIFA ZA MKOPO UNAOOMBWA</div>
     <table class="outer-bordered-table">
         <tr>
             <td>Kiasi cha Mkopo Kinachoombwa TZS</td>
@@ -124,7 +145,7 @@
     <div class="section-title">4. TAARIFA ZANGU ZA UKOPAJI</div>
     <table class="outer-bordered-table">
         <tr>
-            <th>Count</th>
+            <th>idadi jumla ya mikopo</th>
             <th>Kampuni</th>
             <th>Kiasi</th>
             <th>Tarehe</th>
@@ -140,19 +161,30 @@
     </table>
 
     <!-- 5. DHAMANA -->
-    <div class="section-title">5. DHAMANA</div>
-    <table>
-        <tr>
-            <td>Aina ya Dhamana</td>
-            <td class="center-text">1</td>
-            <td class="center-text">2</td>
-            <td class="center-text">3</td>
-            <td class="center-text">4</td>
-            <td class="center-text">5</td>
-            <td class="center-text">6</td>
-            <td class="center-text">7</td>
-        </tr>
-    </table>
+ <div class="section-title">5. DHAMANA</div>
+<table class="outer-bordered-table">
+    <tr>
+        <th>Aina ya Dhamana</th>
+        <?php
+            $collaterals = [];
+            if (!empty($record['app']->loan_collateral)) {
+                $collaterals = explode(',', $record['app']->loan_collateral);
+            }
+        ?>
+        <?php for ($i = 1; $i <= 4; $i++): ?>
+            <th class="center-text"><?= $i ?></th>
+        <?php endfor; ?>
+    </tr>
+    <tr>
+        <td></td>
+        <?php for ($i = 0; $i < 4; $i++): ?>
+            <td class="center-text">
+                <?= isset($collaterals[$i]) ? trim($collaterals[$i]) : '' ?>
+            </td>
+        <?php endfor; ?>
+    </tr>
+</table>
+
 
     <!-- 6. NDUGU WA KARIBU -->
     <div class="section-title">6. NDUGU WA KARIBU</div>
@@ -184,7 +216,7 @@
     </table>
 
     <!-- 7. WADHAMINI -->
-    <div class="section-title">7. WADHAMINI</div>
+    <!-- <div class="section-title">7. WADHAMINI</div>
     <table class="no-border-table">
         <tr>
             <td style="width: 50%">
@@ -205,10 +237,10 @@
                 </table>
             </td>
         </tr>
-    </table>
+    </table> -->
 
     <!-- 8. KIAPO -->
-    <div class="section-title">8. KIAPO</div>
+    <!-- <div class="section-title">8. KIAPO</div>
     <table class="outer-bordered-table">
         <tr>
             <td colspan="8">
@@ -219,16 +251,16 @@
                 ......................
             </td>
         </tr>
-    </table>
+    </table> -->
 
     <!-- 9. RAMANI YA NYUMBANI -->
-    <div class="section-title">9. RAMANI YA NYUMBANI</div>
+    <!-- <div class="section-title">9. RAMANI YA NYUMBANI</div>
     <table class="outer-bordered-table">
         <tr>
             <td style="width: 50%; height: 150px; vertical-align: top">RAMANI YA NYUMBANI</td>
             <td style="width: 50%; height: 150px; vertical-align: top">RAMANI YA BIASHARA</td>
         </tr>
-    </table>
+    </table> -->
 
     <!-- 10. UHAKIKI -->
     <div class="section-title">10. UHAKIKI (KWA MATUMIZI YA OFISI TU)</div>

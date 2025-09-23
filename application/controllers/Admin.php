@@ -40,6 +40,10 @@ public function print_pdf($id)
     
     // Load the record from database
     $record = $this->queries->get_record($id);
+// echo "<pre>";
+//     print_r($record);
+//     echo "<pre>";
+//     exit();
 
     if (!$record) {
         show_404();

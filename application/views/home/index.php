@@ -18,17 +18,54 @@
  			display: flex;
  			font-size: 16px;
  		}
+		  .btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
  	</style> 
  		<style> 
- 		body {background-image: url('<?php echo base_url(); ?>assets/img/image2.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%; } </style> <!-- WRAPPER --> 
+ 		body {background-image: url('<?php echo base_url(); ?>assets/img/image1.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%; } </style> <!-- WRAPPER --> 
+		
  		<div class="container"> <div class=""> <div class="">
+			
  		 <br><br><br><br><br> <div class="">
- 		  <div class="row"> 
+ 		  <div class="row">
+	<div class="mb-4 text-start">
+  <a href="<?php echo base_url('welcome/store'); ?>" 
+     class="btn btn-primary btn-lg d-flex align-items-center" 
+     style="background: linear-gradient(90deg, #0d6efd, #6610f2); 
+            border: none; 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); border-radius: 1rem;">
+    <!-- SVG icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cash me-2" viewBox="0 0 16 16">
+      <path d="M8 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"/>
+    </svg>
+    Omba Mkopo
+  </a>
+</div>
+
+<!-- Hover effect -->
+<style>
+  .btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
+</style>
+ 
  		  	<div class="col-md-3"> 
  		  	</div> 
+
+
+
+
+
  		  	<div class="col-md-6"> 
  		  		<div class="card"> 
  		  		 
+	
+
  		  			
  		  			 
  		  			<div class="body"> 
