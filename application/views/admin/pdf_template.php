@@ -23,17 +23,18 @@
 </head>
 <body>
 <div class="container">
-  <!-- <div class="logo">
-    <img src="/assets/img/4.jpg" alt="Tripple Finance Limited"/>
-</div>
 <div class="logo">
-    <img src="/assets/img/4.jpg" alt="TRIPLE A MICROFINANCE LIMITED"/>
-</div> -->
+    <img src="<?php echo FCPATH . 'assets/img/tripl.png'; ?>" 
+         alt="Tripple Finance Limited" width="150"/>
+</div>
+
+
+
 
 <!-- Company Title -->
 <div style="text-align: center; font-weight: bold; font-size: 13px; line-height: 1.4; margin-bottom: 8px;">
-    TRIPLE A MICROFINANCE LIMITED <br/>
-    P.O.BOX 1234, DAR ES SALAAM - TANZANIA <br/>
+    TRIPLE A FINANCE LIMITED <br/>
+    P.O.BOX 63223, DAR ES SALAAM - TANZANIA <br/>
     SIMU: 0786 542 628 
 </div>
 
