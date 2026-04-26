@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mikoposoft-v2';
+const CACHE_NAME = 'triplea-finance-v2';
 const STATIC_ASSETS = [
   '/',
   '/assets/css/main.css',
   '/assets/css/color_skins.css',
-  '/assets/img/logo_embedded.svg',
+  '/assets/img/rounded_logo.png',
   '/assets/img/icon-192.png',
   '/assets/img/icon-512.png',
   '/assets/vendor/bootstrap/css/bootstrap.min.css',

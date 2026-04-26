@@ -2,7 +2,7 @@
  <!DOCTYPE html> 
  <html lang="en"> 
  <!-- Mirrored from www.wrraptheme.com/templates/lucid/hospital/light/page-login.html by HTTraQt Website Copier/1.x [Karbofos 2012-2017] J2, 22 Mac 2020 05:59:56 GMT --> <head> 
- 	<title>Mikoposoft | Employee Login</title> 
+	<title>Triplea Finance | Employee Login</title> 
  	<meta charset="utf-8"> 
  	<meta http-equiv="X-UA-Compatible" content="IE=Edge"> 
  	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 

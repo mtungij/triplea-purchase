@@ -3,7 +3,7 @@
 
 
 <head>
-<title>Mikoposoft | Admin panel</title>
+<title>Triplea Finance | Admin Panel</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -67,7 +67,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Mikoposoft">
+<meta name="apple-mobile-web-app-title" content="Triplea Finance">
 <link rel="apple-touch-icon" href="<?php echo base_url(); ?>assets/img/icon-192.png">
 
 </head>

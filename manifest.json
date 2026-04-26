@@ -1,7 +1,7 @@
 {
-  "name": "Mikoposoft",
-  "short_name": "Mikoposoft",
-  "description": "Mikoposoft - Loan & Finance Management System",
+  "name": "Triplea Finance",
+  "short_name": "Triplea Finance",
+  "description": "Triplea Finance - Loan & Finance Management System",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

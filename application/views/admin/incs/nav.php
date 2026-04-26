@@ -2,8 +2,8 @@
 <!-- PWA Install Banner -->
 <div id="pwa-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1a73e8;color:#fff;padding:12px 20px;align-items:center;justify-content:space-between;box-shadow:0 -2px 8px rgba(0,0,0,0.2);">
     <div style="display:flex;align-items:center;gap:12px;">
-        <img src="<?php echo base_url(); ?>assets/img/icon-192.png" style="width:36px;height:36px;border-radius:6px;" alt="Mikoposoft">
-        <span style="font-size:14px;font-weight:500;">Install <strong>Mikoposoft</strong> app for quick access</span>
+        <img src="<?php echo base_url(); ?>assets/img/icon-192.png" style="width:36px;height:36px;border-radius:6px;" alt="Triplea Finance">
+        <span style="font-size:14px;font-weight:500;">Install <strong>Triplea Finance</strong> app for quick access</span>
     </div>
     <div style="display:flex;gap:8px;">
         <button id="pwa-install-btn" style="background:#fff;color:#1a73e8;border:none;padding:6px 16px;border-radius:4px;font-weight:600;cursor:pointer;">Install</button>
