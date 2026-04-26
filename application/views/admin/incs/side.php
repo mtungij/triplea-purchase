@@ -215,7 +215,8 @@ $company = $this->queries->get_comp_data($comp_id);
                                     <li><a href="ui-buttons.html">Saving Deposit</a></li>
                                 </ul>
                             </li> -->
-                            <li><a href="<?php echo base_url("admin/daily_report"); ?>"><i class="icon-wallet"></i>Daily Report</a></li>                            
+                            <li><a href="<?php echo base_url("admin/daily_report"); ?>"><i class="icon-wallet"></i>Daily Report</a></li>
+                            <li><a href="<?php echo base_url('admin/officer_daily_reports'); ?>"><i class="icon-doc"></i>OFFICER - DAILY REPORT</a></li>
                         </ul>
                     </nav>
                     <br><br><br>
@@ -430,7 +431,8 @@ $company = $this->queries->get_comp_data($comp_id);
                                     <li><a href="ui-buttons.html">Saving Deposit</a></li>
                                 </ul>
                             </li> -->
-                            <li><a href="<?php echo base_url("admin/daily_report"); ?>"><i class="icon-wallet"></i>Daily Report</a></li>                            
+                            <li><a href="<?php echo base_url("admin/daily_report"); ?>"><i class="icon-wallet"></i>Daily Report</a></li>
+                            <li><a href="<?php echo base_url('admin/officer_daily_reports'); ?>"><i class="icon-doc"></i>OFFICER - DAILY REPORT</a></li>
                         </ul>
                     </nav>
                     <br><br><br>

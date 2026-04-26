@@ -1,5 +1,13 @@
   <?php $empl_id = $this->session->userdata('empl_id'); ?>
    <?php $privillage = $this->queries->get_empl_privillage($empl_id); ?>
+   <?php $empl_position = $this->queries->get_empl_position($empl_id); ?>
+   <?php
+        $position_name = '';
+        if ($empl_position && isset($empl_position->position)) {
+            $position_name = strtoupper(trim(preg_replace('/\s+/', ' ', $empl_position->position)));
+        }
+   ?>
+
 
   <div id="left-sidebar" class="sidebar">
         <div class="sidebar-scroll">
@@ -60,7 +68,7 @@
                                 ?>
                             <li><a href="javascript:void(0);" class="has-arrow"><i class="icon-wallet"></i><span><?php echo $this->lang->line("income_menu"); ?></span> </a>
                                 <ul>
-                                    <li><a href="<?php echo base_url("oficer/income_dashboard"); ?>"><?php echo $this->lang->line("income_non_menu"); ?></a></li>
+                                    <li><a href="<?php echo base_url("oficer/income_dashboard"); ?>">Income Collection</a></li>
                                     <li><a href="<?php echo base_url("oficer/deducted_income"); ?>"><?php echo $this->lang->line("income_deducted_menu"); ?></a></li>
                                     <!-- <li><a href="javascript:;">Transfor Income To Branch Account</a></li> -->
                                     <!-- <li><a href="javascript:;">Transfor Income Branch To Company</a></li> -->
@@ -109,33 +117,34 @@
                             </li>
                                     <?php }elseif ($privillages->privillage == 'group') {
                                      ?>
-                            <li>
-                                <a href="#Authentication" class="has-arrow"><i class="icon-users"></i><span>Groups</span></a>
-                                <ul>
-                                    <li><a href="<?php echo base_url("oficer/grops"); ?>">Register Group</a></li>
-                                    <li><a href="<?php echo base_url("oficer/group_members"); ?>">Groups & Loans</a></li>
-                                    <li><a href="<?php echo base_url("oficer/loan_group_pending"); ?>">Groups Loan Pending</a></li>
-                                    <li><a href="<?php echo base_url("oficer/group_list"); ?>">Groups Collection Sheet</a></li>
-                                </ul>
-                             </li>  
+                             
                                      <?php }elseif ($privillages->privillage == 'teller') {
                                       ?>
                            <li><a href="<?php echo base_url("oficer/teller_dashboard"); ?>"><i class="icon-list"></i>Teller Dashboard</a></li>
 
-                            <li><a href="<?php echo base_url("oficer/saving_deposit"); ?>"><i class="icon-list"></i>Saving Deposit</a></li>
-                                      <?php }elseif ($privillages->privillage == 'float') {
-                                       ?>
-                                 <li>
-                                <a href="#Widgets" class="has-arrow"><i class="icon-list"></i><span>Float</span></a>
-                                <ul>
-                                    <li><a href="<?php echo base_url("oficer/transfor_float_branch"); ?>">Transfor Float</a></li>
-                                    <li><a href="<?php echo base_url("oficer/receive_float"); ?>">Received Float</a></li>  
-                                </ul>
-                            </li>  
+                         
                                  <?php }else{ ?>
 
                                     <?php } ?>
                         <?php endforeach; ?>
+
+                        <?php if (in_array($position_name, ['CREDIT OFFICER', 'CREDIT OFICER'], true)): ?>
+                            <li>
+                                <a href="<?php echo base_url('oficer/create_credit_report'); ?>"><i class="icon-doc"></i><span>Create Credit Report</span></a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if (in_array($position_name, ['COLLECTION OFFICER', 'COLLECTION OFICER'], true)): ?>
+                            <li>
+                                <a href="<?php echo base_url('oficer/create_collection_report'); ?>"><i class="icon-doc"></i><span>Create Collection Report</span></a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php if (in_array($position_name, ['INSURANCE OFFICER', 'INSURANCE OFICER'], true)): ?>
+                            <li>
+                                <a href="<?php echo base_url('oficer/create_insurance_report'); ?>"><i class="icon-doc"></i><span>Create Insurance Report</span></a>
+                            </li>
+                        <?php endif; ?>
 
                         </ul>
                     </nav>

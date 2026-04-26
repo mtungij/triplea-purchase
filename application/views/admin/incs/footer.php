@@ -46,5 +46,47 @@
 </body>
 </body>
 
+<!-- PWA Service Worker & Install Prompt -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('<?php echo base_url(); ?>sw.js')
+            .then(function(reg) { console.log('SW registered:', reg.scope); })
+            .catch(function(err) { console.warn('SW registration failed:', err); });
+    });
+}
+
+// Install prompt banner
+var deferredPrompt;
+window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    var banner = document.getElementById('pwa-install-banner');
+    if (banner) banner.style.display = 'flex';
+});
+document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('pwa-install-btn');
+    var dismiss = document.getElementById('pwa-install-dismiss');
+    if (btn) {
+        btn.addEventListener('click', function() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function() { deferredPrompt = null; });
+            }
+            document.getElementById('pwa-install-banner').style.display = 'none';
+        });
+    }
+    if (dismiss) {
+        dismiss.addEventListener('click', function() {
+            document.getElementById('pwa-install-banner').style.display = 'none';
+        });
+    }
+});
+window.addEventListener('appinstalled', function() {
+    var banner = document.getElementById('pwa-install-banner');
+    if (banner) banner.style.display = 'none';
+});
+</script>
+
 <!-- Mirrored from www.wrraptheme.com/templates/lucid/hospital/light/index.html by HTTraQt Website Copier/1.x [Karbofos 2012-2017] J2, 22 Mac 2020 05:59:42 GMT -->
 </html>

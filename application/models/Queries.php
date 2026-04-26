@@ -7432,6 +7432,105 @@ public function get_total_renew_loan_blanch($blanch_id)
 	return $data->result();
 }
 
+public function get_empl_position($empl_id){
+	$data = $this->db->query("SELECT p.position FROM tbl_employee e JOIN tbl_position p ON p.position_id = e.position_id WHERE e.empl_id = '$empl_id' LIMIT 1");
+	return $data->row();
+}
+
+public function insert_credit_officer_report($data){
+	return $this->db->insert('tbl_credit_officer_report', $data);
+}
+
+public function insert_insurance_officer_report($data){
+	return $this->db->insert('tbl_insurance_officer_report', $data);
+}
+
+public function insert_collection_officer_report($data){
+	return $this->db->insert('tbl_collection_officer_report', $data);
+}
+
+public function get_credit_officer_reports($comp_id, $from_date = null, $to_date = null){
+	$comp_id = $this->db->escape_str($comp_id);
+	$where = "r.comp_id = '$comp_id'";
+	if (!empty($from_date)) { $where .= " AND r.report_date >= '" . $this->db->escape_str($from_date) . "'"; }
+	if (!empty($to_date))   { $where .= " AND r.report_date <= '" . $this->db->escape_str($to_date) . "'"; }
+	$data = $this->db->query("SELECT r.*, e.empl_name, b.blanch_name
+		FROM tbl_credit_officer_report r
+		LEFT JOIN tbl_employee e ON e.empl_id = r.empl_id
+		LEFT JOIN tbl_blanch b ON b.blanch_id = r.blanch_id
+		WHERE $where
+		ORDER BY r.report_date DESC, r.report_id DESC");
+	return $data->result();
+}
+
+public function get_officer_reports_by_title($comp_id, $report_title){
+	$data = $this->db->query("SELECT r.*, e.empl_name, b.blanch_name
+		FROM tbl_credit_officer_report r
+		LEFT JOIN tbl_employee e ON e.empl_id = r.empl_id
+		LEFT JOIN tbl_blanch b ON b.blanch_id = r.blanch_id
+		WHERE r.comp_id = '$comp_id' AND r.report_title = '$report_title'
+		ORDER BY r.report_date DESC, r.report_id DESC");
+	return $data->result();
+}
+
+public function get_credit_officer_report($report_id, $comp_id){
+	$data = $this->db->query("SELECT r.*, e.empl_name, b.blanch_name
+		FROM tbl_credit_officer_report r
+		LEFT JOIN tbl_employee e ON e.empl_id = r.empl_id
+		LEFT JOIN tbl_blanch b ON b.blanch_id = r.blanch_id
+		WHERE r.report_id = '$report_id' AND r.comp_id = '$comp_id'
+		LIMIT 1");
+	return $data->row();
+}
+
+public function get_insurance_officer_reports($comp_id, $from_date = null, $to_date = null){
+	$comp_id = $this->db->escape_str($comp_id);
+	$where = "r.comp_id = '$comp_id'";
+	if (!empty($from_date)) { $where .= " AND r.report_date >= '" . $this->db->escape_str($from_date) . "'"; }
+	if (!empty($to_date))   { $where .= " AND r.report_date <= '" . $this->db->escape_str($to_date) . "'"; }
+	$data = $this->db->query("SELECT r.*, e.empl_name, b.blanch_name
+		FROM tbl_insurance_officer_report r
+		LEFT JOIN tbl_employee e ON e.empl_id = r.empl_id
+		LEFT JOIN tbl_blanch b ON b.blanch_id = r.blanch_id
+		WHERE $where
+		ORDER BY r.report_date DESC, r.report_id DESC");
+	return $data->result();
+}
+
+public function get_insurance_officer_report($report_id, $comp_id){
+	$data = $this->db->query("SELECT r.*, e.empl_name, b.blanch_name
+		FROM tbl_insurance_officer_report r
+		LEFT JOIN tbl_employee e ON e.empl_id = r.empl_id
+		LEFT JOIN tbl_blanch b ON b.blanch_id = r.blanch_id
+		WHERE r.report_id = '$report_id' AND r.comp_id = '$comp_id'
+		LIMIT 1");
+	return $data->row();
+}
+
+public function get_collection_officer_reports($comp_id, $from_date = null, $to_date = null){
+	$comp_id = $this->db->escape_str($comp_id);
+	$where = "r.comp_id = '$comp_id'";
+	if (!empty($from_date)) { $where .= " AND r.report_date >= '" . $this->db->escape_str($from_date) . "'"; }
+	if (!empty($to_date))   { $where .= " AND r.report_date <= '" . $this->db->escape_str($to_date) . "'"; }
+	$data = $this->db->query("SELECT r.*, e.empl_name, b.blanch_name
+		FROM tbl_collection_officer_report r
+		LEFT JOIN tbl_employee e ON e.empl_id = r.empl_id
+		LEFT JOIN tbl_blanch b ON b.blanch_id = r.blanch_id
+		WHERE $where
+		ORDER BY r.report_date DESC, r.report_id DESC");
+	return $data->result();
+}
+
+public function get_collection_officer_report($report_id, $comp_id){
+	$data = $this->db->query("SELECT r.*, e.empl_name, b.blanch_name
+		FROM tbl_collection_officer_report r
+		LEFT JOIN tbl_employee e ON e.empl_id = r.empl_id
+		LEFT JOIN tbl_blanch b ON b.blanch_id = r.blanch_id
+		WHERE r.report_id = '$report_id' AND r.comp_id = '$comp_id'
+		LIMIT 1");
+	return $data->row();
+}
+
 
 public function get_groups($comp_id){
 	$data = $this->db->query("SELECT * FROM tbl_group g LEFT JOIN tbl_blanch b ON b.blanch_id = g.blanch_id WHERE g.comp_id = '$comp_id'");

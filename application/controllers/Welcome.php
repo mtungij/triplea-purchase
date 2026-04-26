@@ -232,118 +232,37 @@ public function store()
 			     // print_r($userexit);
 			     //           exit();
 		if ($userexit){
-				if ($userexit->position_id == '1') {
-					$sessionData = [
-					'empl_id' => $userexit->empl_id,
-					//'comp_id' => $userexit->comp_id,
-					'blanch_id' => $userexit->blanch_id,
-					'username' => $userexit->username,
-					'empl_name' => $userexit->empl_name,
-					];
-					 // echo "<pre>";
-			   //   print_r($userexit);
-			   //             exit();
-					if ($userexit->empl_status == 'open'){
-                      	$this->session->set_userdata($sessionData);
-                      	$this->session->set_flashdata('massage',$this->lang->line("login_menu"));
-                      	return redirect('oficer/index');
-                      }elseif ($userexit->empl_status == 'close') {
-                    $this->session->set_userdata($sessionData);
-                    $this->session->set_flashdata('mass',$this->lang->line("blocked_menu"));
-					return redirect("welcome/employee_login");
-                      }
-				}elseif($userexit->position_id == '2'){
-					$sessionData = [
-					'empl_id' => $userexit->empl_id,
-					//'comp_id' => $userexit->comp_id,
-					'blanch_id' => $userexit->blanch_id,
-					'username' => $userexit->username,
-					'empl_name' => $userexit->empl_name,
-					];
-                    
-
-					if ($userexit->empl_status == 'open'){
-                      	$this->session->set_userdata($sessionData);
-                      	$this->session->set_flashdata('massage',$this->lang->line("login_menu"));
-                      	return redirect('oficer/index');
-                      }elseif ($userexit->empl_status == 'close') {
-                    $this->session->set_userdata($sessionData);
-                    $this->session->set_flashdata('mass',$this->lang->line("blocked_menu"));
-					return redirect("welcome/employee_login");
-                      }
-
-				}elseif($userexit->position_id == '6'){
-					$sessionData = [
-					'empl_id' => $userexit->empl_id,
-					//'comp_id' => $userexit->comp_id,
-					'blanch_id' => $userexit->blanch_id,
-					'username' => $userexit->username,
-					'empl_name' => $userexit->empl_name,
-					];
-        //       echo "<pre>";
-        // print_r($userexit);
-        //      exit();
-				
-
-				   if ($userexit->empl_status == 'open'){
-                   $this->session->set_userdata($sessionData);
-                   $this->session->set_flashdata('massage',$this->lang->line("login_menu"));
-                    return redirect('oficer/index');
-                  }elseif ($userexit->empl_status == 'close') {
-                    $this->session->set_userdata($sessionData);
-                    $this->session->set_flashdata('mass',$this->lang->line("blocked_menu"));
-				  return redirect("welcome/employee_login");
-                      }
-
-				}elseif ($userexit->position_id == '17') {
-					$sessionData = [
-					'empl_id' => $userexit->empl_id,
-					//'comp_id' => $userexit->comp_id,
-					'blanch_id' => $userexit->blanch_id,
-					'username' => $userexit->username,
-					'empl_name' => $userexit->empl_name,
-					];
-
-						   	 // echo "<pre>";
-			        // print_r($userexit);
-			        //        exit();
-
-					if ($userexit->empl_status == 'open'){
-                   $this->session->set_userdata($sessionData);
-                   $this->session->set_flashdata('massage',$this->lang->line("login_menu"));
-                    return redirect('oficer/index');
-                  }elseif ($userexit->empl_status == 'close') {
-                    $this->session->set_userdata($sessionData);
-                    $this->session->set_flashdata('mass',$this->lang->line("blocked_menu"));
-				  return redirect("welcome/employee_login");
-                      }
-				}elseif($userexit->position_id == '22') {
-					$sessionData = [
+				$sessionData = [
 					'empl_id' => $userexit->empl_id,
 					'blanch_id' => $userexit->blanch_id,
 					'username' => $userexit->username,
 					'empl_name' => $userexit->empl_name,
-					'comp_id' => $userexit->comp_id,
 					'position_id' => $userexit->position_id,
-					];
+				];
 
-						   	 // echo "<pre>";
-			        // print_r($userexit);
-			        //        exit();
+				if ($userexit->position_id == '22') {
+					$sessionData['comp_id'] = $userexit->comp_id;
 
 					if ($userexit->empl_status == 'open'){
-                   $this->session->set_userdata($sessionData);
-                   $this->session->set_flashdata('massage',$this->lang->line("login_menu"));
-                   //$txt = "samwel";
-                  // $encrypttext = urlencode($this->encrypt->encode($txt));
-                    return redirect('admin/index');
-                  }elseif ($userexit->empl_status == 'close') {
-                    $this->session->set_userdata($sessionData);
-                    $this->session->set_flashdata('mass',$this->lang->line("blocked_menu"));
-				  return redirect("welcome/employee_login");
-                      }
-                  }
-				
+						$this->session->set_userdata($sessionData);
+						$this->session->set_flashdata('massage',$this->lang->line("login_menu"));
+						return redirect('admin/index');
+					}elseif ($userexit->empl_status == 'close') {
+						$this->session->set_userdata($sessionData);
+						$this->session->set_flashdata('mass',$this->lang->line("blocked_menu"));
+						return redirect("welcome/employee_login");
+					}
+				}else{
+					if ($userexit->empl_status == 'open'){
+						$this->session->set_userdata($sessionData);
+						$this->session->set_flashdata('massage',$this->lang->line("login_menu"));
+						return redirect('oficer/index');
+					}elseif ($userexit->empl_status == 'close') {
+						$this->session->set_userdata($sessionData);
+						$this->session->set_flashdata('mass',$this->lang->line("blocked_menu"));
+						return redirect("welcome/employee_login");
+					}
+				}
 			}else{
 				$this->session->set_flashdata('mass',$this->lang->line("invalid_account_menu"));
 				return redirect("welcome/employee_login");

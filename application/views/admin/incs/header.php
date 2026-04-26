@@ -61,6 +61,16 @@
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/croper.min.css">
 
 </head>
+<!-- PWA -->
+<link rel="manifest" href="<?php echo base_url(); ?>manifest.json">
+<meta name="theme-color" content="#1a73e8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mikoposoft">
+<link rel="apple-touch-icon" href="<?php echo base_url(); ?>assets/img/icon-192.png">
+
+</head>
 <body class="theme-cyan">
 
 <!-- Page Loader -->
