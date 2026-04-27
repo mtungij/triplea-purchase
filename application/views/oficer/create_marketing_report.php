@@ -70,45 +70,42 @@
                                 </table>
                             </div>
 
-                            <div class="mb-4 mt-4">
-                                <h4>CLIENT ACQUISITION DETAILS</h4>
+                            <div class="mb-4 mt-4 d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">CLIENT ACQUISITION DETAILS</h4>
+                                <button type="button" class="btn btn-success btn-sm" onclick="addClientRow()"><i class="fa fa-plus"></i> Add Client</button>
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Client Name <span class="text-danger">*</span></label>
-                                        <input type="text" name="client_name" class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Business Type <span class="text-danger">*</span></label>
-                                        <input type="text" name="business_type" class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Loan Amount Requested <span class="text-danger">*</span></label>
-                                        <input type="number" min="0" step="0.01" name="loan_amount_requested" class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Status (Lead/Application/Approved) <span class="text-danger">*</span></label>
-                                        <select name="client_status" class="form-control" required>
-                                            <option value="">Select status</option>
-                                            <option value="Lead">Lead</option>
-                                            <option value="Application">Application</option>
-                                            <option value="Approved">Approved</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Contact <span class="text-danger">*</span></label>
-                                        <input type="text" name="contact" class="form-control" required>
-                                    </div>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="client_acquisition_table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Client Name</th>
+                                            <th>Business Type</th>
+                                            <th>Loan Amount Requested (TZS)</th>
+                                            <th>Status</th>
+                                            <th>Contact</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="client_acquisition_tbody">
+                                        <tr>
+                                            <td class="row-num">1</td>
+                                            <td><input type="text" name="client_name[]" class="form-control" placeholder="Client name" required></td>
+                                            <td><input type="text" name="business_type[]" class="form-control" placeholder="Business type" required></td>
+                                            <td><input type="number" min="0" step="0.01" name="loan_amount_requested[]" class="form-control" placeholder="0.00" required></td>
+                                            <td>
+                                                <select name="client_status[]" class="form-control" required>
+                                                    <option value="">Select</option>
+                                                    <option value="Lead">Lead</option>
+                                                    <option value="Application">Application</option>
+                                                    <option value="Approved">Approved</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" name="contact[]" class="form-control" placeholder="Phone / email" required></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeClientRow(this)" disabled><i class="fa fa-trash"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
                             <div class="mb-4 mt-4">
@@ -314,6 +311,46 @@
 </div>
 
 <script>
+function addClientRow() {
+    var tbody = document.getElementById('client_acquisition_tbody');
+    var rows = tbody.querySelectorAll('tr');
+    var newIndex = rows.length + 1;
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td class="row-num">' + newIndex + '</td>'
+        + '<td><input type="text" name="client_name[]" class="form-control" placeholder="Client name" required></td>'
+        + '<td><input type="text" name="business_type[]" class="form-control" placeholder="Business type" required></td>'
+        + '<td><input type="number" min="0" step="0.01" name="loan_amount_requested[]" class="form-control" placeholder="0.00" required></td>'
+        + '<td><select name="client_status[]" class="form-control" required>'
+        +   '<option value="">Select</option>'
+        +   '<option value="Lead">Lead</option>'
+        +   '<option value="Application">Application</option>'
+        +   '<option value="Approved">Approved</option>'
+        + '</select></td>'
+        + '<td><input type="text" name="contact[]" class="form-control" placeholder="Phone / email" required></td>'
+        + '<td><button type="button" class="btn btn-danger btn-sm" onclick="removeClientRow(this)"><i class="fa fa-trash"></i></button></td>';
+    tbody.appendChild(tr);
+    updateClientRemoveButtons();
+}
+
+function removeClientRow(btn) {
+    var tbody = document.getElementById('client_acquisition_tbody');
+    if (tbody.querySelectorAll('tr').length <= 1) return;
+    btn.closest('tr').remove();
+    tbody.querySelectorAll('tr').forEach(function (row, i) {
+        row.querySelector('.row-num').textContent = i + 1;
+    });
+    updateClientRemoveButtons();
+}
+
+function updateClientRemoveButtons() {
+    var tbody = document.getElementById('client_acquisition_tbody');
+    var rows = tbody.querySelectorAll('tr');
+    rows.forEach(function (row) {
+        var btn = row.querySelector('button[onclick^="removeClientRow"]');
+        if (btn) btn.disabled = rows.length <= 1;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     function updateVariance(activityKey) {
         var targetInput = document.querySelector('.js-variance-target[data-variance-key="' + activityKey + '"]');

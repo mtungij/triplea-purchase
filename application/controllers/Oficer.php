@@ -7457,11 +7457,40 @@ public function create_marketing_report(){
         $report_body .= "- Remarks: " . $remarks . "\n\n";
       }
 
-      $client_name = trim((string) $this->input->post('client_name'));
-      $business_type = trim((string) $this->input->post('business_type'));
-      $loan_amount_requested = (float) $this->input->post('loan_amount_requested');
-      $client_status = trim((string) $this->input->post('client_status'));
-      $contact = trim((string) $this->input->post('contact'));
+      // CLIENT ACQUISITION DETAILS — array inputs (multiple rows)
+      $raw_client_names        = $this->input->post('client_name');
+      $raw_business_types      = $this->input->post('business_type');
+      $raw_loan_amounts        = $this->input->post('loan_amount_requested');
+      $raw_client_statuses     = $this->input->post('client_status');
+      $raw_contacts            = $this->input->post('contact');
+
+      $raw_client_names    = is_array($raw_client_names)    ? $raw_client_names    : array($raw_client_names);
+      $raw_business_types  = is_array($raw_business_types)  ? $raw_business_types  : array($raw_business_types);
+      $raw_loan_amounts    = is_array($raw_loan_amounts)    ? $raw_loan_amounts    : array($raw_loan_amounts);
+      $raw_client_statuses = is_array($raw_client_statuses) ? $raw_client_statuses : array($raw_client_statuses);
+      $raw_contacts        = is_array($raw_contacts)        ? $raw_contacts        : array($raw_contacts);
+
+      $clients = array();
+      $count = count($raw_client_names);
+      for ($ci = 0; $ci < $count; $ci++) {
+        $cn = trim((string) ($raw_client_names[$ci] ?? ''));
+        $bt = trim((string) ($raw_business_types[$ci] ?? ''));
+        $la = (float) ($raw_loan_amounts[$ci] ?? 0);
+        $cs = trim((string) ($raw_client_statuses[$ci] ?? ''));
+        $co = trim((string) ($raw_contacts[$ci] ?? ''));
+        if ($cn === '' && $bt === '' && $co === '') continue; // skip empty rows
+        $clients[] = array(
+          'client_name'           => $cn,
+          'business_type'         => $bt,
+          'loan_amount_requested' => $la,
+          'client_status'         => $cs,
+          'contact'               => $co,
+        );
+      }
+      if (empty($clients)) {
+        $clients[] = array('client_name'=>'N/A','business_type'=>'N/A','loan_amount_requested'=>0,'client_status'=>'N/A','contact'=>'N/A');
+      }
+
       $total_loan_value_generated = (float) $this->input->post('total_loan_value_generated');
       $total_insurance_sales_value = (float) $this->input->post('total_insurance_sales_value');
       $number_of_new_clients = (int) $this->input->post('number_of_new_clients');
@@ -7488,13 +7517,7 @@ public function create_marketing_report(){
       $score_professionalism = (float) $this->input->post('score_professionalism');
       $total_score = (float) $this->input->post('total_score');
 
-      $report_payload['client_acquisition_details'] = array(
-        'client_name' => $client_name,
-        'business_type' => $business_type,
-        'loan_amount_requested' => $loan_amount_requested,
-        'client_status' => $client_status,
-        'contact' => $contact,
-      );
+      $report_payload['client_acquisition_details'] = $clients;
 
       $report_payload['sales_performance'] = array(
         'total_loan_value_generated' => $total_loan_value_generated,
@@ -7538,11 +7561,16 @@ public function create_marketing_report(){
       $report_payload['action_plan_next_day'] = $action_plan_next_day;
 
       $report_body .= "2. CLIENT ACQUISITION DETAILS\n";
-      $report_body .= "- Client Name: " . ($client_name === '' ? 'N/A' : $client_name) . "\n";
-      $report_body .= "- Business Type: " . ($business_type === '' ? 'N/A' : $business_type) . "\n";
-      $report_body .= "- Loan Amount Requested: " . number_format($loan_amount_requested, 2, '.', '') . "\n";
-      $report_body .= "- Status (Lead/Application/Approved): " . ($client_status === '' ? 'N/A' : $client_status) . "\n";
-      $report_body .= "- Contact: " . ($contact === '' ? 'N/A' : $contact) . "\n\n";
+      foreach ($clients as $idx => $cl) {
+        $num = $idx + 1;
+        $report_body .= "  Client #" . $num . ":\n";
+        $report_body .= "  - Client Name: " . ($cl['client_name'] === '' ? 'N/A' : $cl['client_name']) . "\n";
+        $report_body .= "  - Business Type: " . ($cl['business_type'] === '' ? 'N/A' : $cl['business_type']) . "\n";
+        $report_body .= "  - Loan Amount Requested: " . number_format($cl['loan_amount_requested'], 2, '.', '') . "\n";
+        $report_body .= "  - Status: " . ($cl['client_status'] === '' ? 'N/A' : $cl['client_status']) . "\n";
+        $report_body .= "  - Contact: " . ($cl['contact'] === '' ? 'N/A' : $cl['contact']) . "\n";
+      }
+      $report_body .= "\n";
 
       $report_body .= "3. SALES PERFORMANCE\n";
       $report_body .= "a) Total Loan Value Generated: TZS " . number_format($total_loan_value_generated, 2, '.', '') . "\n";
