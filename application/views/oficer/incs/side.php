@@ -146,6 +146,12 @@
                             </li>
                         <?php endif; ?>
 
+                        <?php if (in_array($position_name, ['MARKETING OFFICER', 'MARKETING OFICER'], true)): ?>
+                            <li>
+                                <a href="<?php echo base_url('oficer/create_marketing_report'); ?>"><i class="icon-doc"></i><span>Create Marketing Report</span></a>
+                            </li>
+                        <?php endif; ?>
+
                         </ul>
                     </nav>
                     <br><br><br><br>

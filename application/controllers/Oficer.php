@@ -7400,6 +7400,214 @@ public function create_collection_report(){
   return $this->create_report('collection');
 }
 
+public function create_marketing_report(){
+    $this->load->model('queries');
+    $empl_id = $this->session->userdata('empl_id');
+    $manager_data = $this->queries->get_manager_data($empl_id);
+    $comp_id = $manager_data->comp_id;
+    $blanch_id = $this->session->userdata('blanch_id');
+    $empl_data = $this->queries->get_employee_data($empl_id);
+    $empl_position = $this->queries->get_empl_position($empl_id);
+    $position_name = '';
+
+    if ($empl_position && isset($empl_position->position)) {
+      $position_name = strtoupper(trim(preg_replace('/\s+/', ' ', $empl_position->position)));
+    }
+
+    if (!in_array($position_name, array('MARKETING OFFICER', 'MARKETING OFICER'), true)) {
+      return redirect('oficer/index');
+    }
+
+    $activities = array(
+      'field_visits_conducted' => 'Field Visits Conducted',
+      'new_leads_generated' => 'New Leads Generated',
+      'client_meetings_held' => 'Client Meetings Held',
+      'applications_loan_collected' => 'Applications Loan Collected',
+      'insurance_clients_acquired' => 'Insurance Clients Acquired',
+      'follow_ups_conducted' => 'Follow-ups Conducted',
+    );
+
+    if ($this->input->post()) {
+      $report_payload = array(
+        'activities' => array(),
+      );
+      $report_body = "1. DAILY ACTIVITY\n";
+      foreach ($activities as $activity_key => $activity_label) {
+        $target = (float) $this->input->post($activity_key . '_target');
+        $actual = (float) $this->input->post($activity_key . '_actual');
+        $variance = (float) $this->input->post($activity_key . '_variance');
+        $remarks = trim((string) $this->input->post($activity_key . '_remarks'));
+
+        if ($remarks === '') {
+          $remarks = 'None';
+        }
+
+        $report_payload['activities'][$activity_key] = array(
+          'label' => $activity_label,
+          'target' => $target,
+          'actual' => $actual,
+          'variance' => $variance,
+          'remarks' => $remarks,
+        );
+
+        $report_body .= $activity_label . "\n";
+        $report_body .= "- Target: " . number_format($target, 2, '.', '') . "\n";
+        $report_body .= "- Actual: " . number_format($actual, 2, '.', '') . "\n";
+        $report_body .= "- Variance: " . number_format($variance, 2, '.', '') . "\n";
+        $report_body .= "- Remarks: " . $remarks . "\n\n";
+      }
+
+      $client_name = trim((string) $this->input->post('client_name'));
+      $business_type = trim((string) $this->input->post('business_type'));
+      $loan_amount_requested = (float) $this->input->post('loan_amount_requested');
+      $client_status = trim((string) $this->input->post('client_status'));
+      $contact = trim((string) $this->input->post('contact'));
+      $total_loan_value_generated = (float) $this->input->post('total_loan_value_generated');
+      $total_insurance_sales_value = (float) $this->input->post('total_insurance_sales_value');
+      $number_of_new_clients = (int) $this->input->post('number_of_new_clients');
+      $conversion_rate = (float) $this->input->post('conversion_rate');
+      $pipeline_new_leads = (int) $this->input->post('pipeline_new_leads');
+      $pipeline_under_follow_up = (int) $this->input->post('pipeline_under_follow_up');
+      $pipeline_applications_submitted = (int) $this->input->post('pipeline_applications_submitted');
+      $pipeline_approved = (int) $this->input->post('pipeline_approved');
+      $pipeline_rejected = (int) $this->input->post('pipeline_rejected');
+      $areas_visited = trim((string) $this->input->post('areas_visited'));
+      $key_business_sectors_targeted = trim((string) $this->input->post('key_business_sectors_targeted'));
+      $competitor_activity_observed = trim((string) $this->input->post('competitor_activity_observed'));
+      $market_feedback = trim((string) $this->input->post('market_feedback'));
+      $posts_created_today = (int) $this->input->post('posts_created_today');
+      $platforms_used = trim((string) $this->input->post('platforms_used'));
+      $engagement_level = trim((string) $this->input->post('engagement_level'));
+      $leads_generated_online = (int) $this->input->post('leads_generated_online');
+      $challenges_faced = trim((string) $this->input->post('challenges_faced'));
+      $action_plan_next_day = trim((string) $this->input->post('action_plan_next_day'));
+      $score_client_acquisition = (float) $this->input->post('score_client_acquisition');
+      $score_sales_performance = (float) $this->input->post('score_sales_performance');
+      $score_follow_up_effectiveness = (float) $this->input->post('score_follow_up_effectiveness');
+      $score_quality_of_clients = (float) $this->input->post('score_quality_of_clients');
+      $score_professionalism = (float) $this->input->post('score_professionalism');
+      $total_score = (float) $this->input->post('total_score');
+
+      $report_payload['client_acquisition_details'] = array(
+        'client_name' => $client_name,
+        'business_type' => $business_type,
+        'loan_amount_requested' => $loan_amount_requested,
+        'client_status' => $client_status,
+        'contact' => $contact,
+      );
+
+      $report_payload['sales_performance'] = array(
+        'total_loan_value_generated' => $total_loan_value_generated,
+        'total_insurance_sales_value' => $total_insurance_sales_value,
+        'number_of_new_clients' => $number_of_new_clients,
+        'conversion_rate' => $conversion_rate,
+      );
+
+      $report_payload['pipeline_status'] = array(
+        'new_leads' => $pipeline_new_leads,
+        'under_follow_up' => $pipeline_under_follow_up,
+        'applications_submitted' => $pipeline_applications_submitted,
+        'approved' => $pipeline_approved,
+        'rejected' => $pipeline_rejected,
+      );
+
+      $report_payload['field_activity_report'] = array(
+        'areas_visited' => $areas_visited,
+        'key_business_sectors_targeted' => $key_business_sectors_targeted,
+        'competitor_activity_observed' => $competitor_activity_observed,
+        'market_feedback' => $market_feedback,
+      );
+
+      $report_payload['digital_marketing_performance'] = array(
+        'posts_created_today' => $posts_created_today,
+        'platforms_used' => $platforms_used,
+        'engagement_level' => $engagement_level,
+        'leads_generated_online' => $leads_generated_online,
+      );
+
+      $report_payload['daily_performance_score'] = array(
+        'client_acquisition' => $score_client_acquisition,
+        'sales_performance' => $score_sales_performance,
+        'follow_up_effectiveness' => $score_follow_up_effectiveness,
+        'quality_of_clients' => $score_quality_of_clients,
+        'professionalism' => $score_professionalism,
+        'total_score' => $total_score,
+      );
+
+      $report_payload['challenges_faced'] = $challenges_faced;
+      $report_payload['action_plan_next_day'] = $action_plan_next_day;
+
+      $report_body .= "2. CLIENT ACQUISITION DETAILS\n";
+      $report_body .= "- Client Name: " . ($client_name === '' ? 'N/A' : $client_name) . "\n";
+      $report_body .= "- Business Type: " . ($business_type === '' ? 'N/A' : $business_type) . "\n";
+      $report_body .= "- Loan Amount Requested: " . number_format($loan_amount_requested, 2, '.', '') . "\n";
+      $report_body .= "- Status (Lead/Application/Approved): " . ($client_status === '' ? 'N/A' : $client_status) . "\n";
+      $report_body .= "- Contact: " . ($contact === '' ? 'N/A' : $contact) . "\n\n";
+
+      $report_body .= "3. SALES PERFORMANCE\n";
+      $report_body .= "a) Total Loan Value Generated: TZS " . number_format($total_loan_value_generated, 2, '.', '') . "\n";
+      $report_body .= "b) Total Insurance Sales Value: TZS " . number_format($total_insurance_sales_value, 2, '.', '') . "\n";
+      $report_body .= "c) Number of New Clients: " . $number_of_new_clients . "\n";
+      $report_body .= "d) Conversion Rate (Leads to Applications): " . number_format($conversion_rate, 2, '.', '') . " %\n\n";
+
+      $report_body .= "4. PIPELINE STATUS\n";
+      $report_body .= "- New Leads: " . $pipeline_new_leads . "\n";
+      $report_body .= "- Under Follow-up: " . $pipeline_under_follow_up . "\n";
+      $report_body .= "- Applications Submitted: " . $pipeline_applications_submitted . "\n";
+      $report_body .= "- Approved: " . $pipeline_approved . "\n";
+      $report_body .= "- Rejected: " . $pipeline_rejected . "\n\n";
+
+      $report_body .= "6. FIELD ACTIVITY REPORT\n";
+      $report_body .= "a) Areas visited: " . ($areas_visited === '' ? 'N/A' : $areas_visited) . "\n";
+      $report_body .= "b) Key business sectors targeted: " . ($key_business_sectors_targeted === '' ? 'N/A' : $key_business_sectors_targeted) . "\n";
+      $report_body .= "c) Competitor activity observed: " . ($competitor_activity_observed === '' ? 'N/A' : $competitor_activity_observed) . "\n";
+      $report_body .= "d) Market feedback: " . ($market_feedback === '' ? 'N/A' : $market_feedback) . "\n\n";
+
+      $report_body .= "7. DIGITAL MARKETING PERFORMANCE\n";
+      $report_body .= "a) Posts created today: " . $posts_created_today . "\n";
+      $report_body .= "b) Platforms used (WhatsApp, Facebook, etc.): " . ($platforms_used === '' ? 'N/A' : $platforms_used) . "\n";
+      $report_body .= "c) Engagement level (High/Medium/Low): " . ($engagement_level === '' ? 'N/A' : $engagement_level) . "\n";
+      $report_body .= "d) Leads generated online: " . $leads_generated_online . "\n\n";
+
+      $report_body .= "8. DAILY PERFORMANCE SCORE\n";
+      $report_body .= "- Client Acquisition: " . number_format($score_client_acquisition, 2, '.', '') . "\n";
+      $report_body .= "- Sales Performance: " . number_format($score_sales_performance, 2, '.', '') . "\n";
+      $report_body .= "- Follow-up Effectiveness: " . number_format($score_follow_up_effectiveness, 2, '.', '') . "\n";
+      $report_body .= "- Quality of Clients: " . number_format($score_quality_of_clients, 2, '.', '') . "\n";
+      $report_body .= "- Professionalism: " . number_format($score_professionalism, 2, '.', '') . "\n";
+      $report_body .= "- Total Score: " . number_format($total_score, 2, '.', '') . "\n\n";
+
+      $report_body .= "9. CHALLENGES FACED\n";
+      $report_body .= ($challenges_faced === '' ? 'N/A' : $challenges_faced) . "\n\n";
+
+      $report_body .= "10. ACTION PLAN FOR NEXT DAY\n";
+      $report_body .= ($action_plan_next_day === '' ? 'N/A' : $action_plan_next_day) . "\n";
+
+      $data = array(
+        'empl_id'      => $empl_id,
+        'comp_id'      => $comp_id,
+        'blanch_id'    => $blanch_id,
+        'report_title' => 'Marketing Officer Report',
+        'report_body'  => $report_body,
+        'report_payload' => json_encode($report_payload),
+        'report_date'  => date('Y-m-d'),
+      );
+
+      $this->queries->insert_marketing_officer_report($data);
+      $this->session->set_flashdata('massage', 'Marketing report submitted successfully');
+      return redirect('oficer/create_marketing_report');
+    }
+
+    $privillage = $this->queries->get_empl_privillage($empl_id);
+    $view_data = array(
+      'privillage' => $privillage,
+      'empl_data'  => $empl_data,
+      'position_name' => $position_name,
+      'activities' => $activities,
+    );
+    $this->load->view('oficer/create_marketing_report', $view_data);
+}
+
 public function create_report($report_type = 'credit'){
     $this->load->model('queries');
     $empl_id = $this->session->userdata('empl_id');

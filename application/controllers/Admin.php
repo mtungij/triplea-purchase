@@ -10728,11 +10728,14 @@ echo $this->queries->fetch_loan_active_day($this->input->post('customer_id'));
                           ? $this->queries->get_insurance_officer_reports($comp_id, $from_date, $to_date)  : [];
     $collection_reports = ($report_type === 'all' || $report_type === 'collection')
                           ? $this->queries->get_collection_officer_reports($comp_id, $from_date, $to_date) : [];
+    $marketing_reports  = ($report_type === 'all' || $report_type === 'marketing')
+                          ? $this->queries->get_marketing_officer_reports($comp_id, $from_date, $to_date)  : [];
 
     $this->load->view('admin/credit_officer_daily_reports', [
       'credit_reports'     => $credit_reports,
       'insurance_reports'  => $insurance_reports,
       'collection_reports' => $collection_reports,
+      'marketing_reports'  => $marketing_reports,
       'filter_from'        => $from_date  ?: '',
       'filter_to'          => $to_date    ?: '',
       'filter_type'        => $report_type,
@@ -10860,6 +10863,46 @@ echo $this->queries->fetch_loan_active_day($this->input->post('customer_id'));
     }
     $reportDate = !empty($report->report_date) ? date('Ymd', strtotime($report->report_date)) : date('Ymd');
     $filename = 'collection_officer_report_' . $creatorSlug . '_' . $reportDate . '.pdf';
+    $mpdf->Output($filename, 'D');
+  }
+
+  public function marketing_daily_report_view($report_id){
+    $this->load->model('queries');
+    $comp_id = $this->session->userdata('comp_id');
+    $report = $this->queries->get_marketing_officer_report($report_id, $comp_id);
+
+    if (!$report) {
+      show_404();
+    }
+
+    $this->load->view('admin/credit_officer_daily_report_view', ['report' => $report]);
+  }
+
+  public function marketing_daily_report_download($report_id){
+    $this->load->model('queries');
+    $comp_id = $this->session->userdata('comp_id');
+    $compdata = $this->queries->get_companyData($comp_id);
+    $report = $this->queries->get_marketing_officer_report($report_id, $comp_id);
+
+    if (!$report) {
+      show_404();
+    }
+
+    $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4']);
+    $html = $this->load->view('admin/credit_officer_daily_report_pdf', ['report' => $report, 'compdata' => $compdata], true);
+    if ($compdata && isset($compdata->comp_name)) {
+      $mpdf->SetWatermarkText($compdata->comp_name);
+      $mpdf->showWatermarkText = true;
+    }
+    $mpdf->WriteHTML($html);
+    $creatorName = trim((string) ($report->empl_name ?? 'unknown'));
+    $creatorSlug = strtolower(preg_replace('/[^a-z0-9]+/i', '_', $creatorName));
+    $creatorSlug = trim($creatorSlug, '_');
+    if ($creatorSlug === '') {
+      $creatorSlug = 'unknown';
+    }
+    $reportDate = !empty($report->report_date) ? date('Ymd', strtotime($report->report_date)) : date('Ymd');
+    $filename = 'marketing_officer_report_' . $creatorSlug . '_' . $reportDate . '.pdf';
     $mpdf->Output($filename, 'D');
   }
 

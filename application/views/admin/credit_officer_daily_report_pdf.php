@@ -1,6 +1,7 @@
 <?php
 $isInsuranceReport = stripos((string) ($report->report_title ?? ''), 'INSURANCE') !== false;
 $isCollectionReport = stripos((string) ($report->report_title ?? ''), 'COLLECTION') !== false;
+$isMarketingReport = stripos((string) ($report->report_title ?? ''), 'MARKETING') !== false;
 
 if ($isCollectionReport) {
     $primaryColor = '#b54708';
@@ -20,6 +21,15 @@ if ($isCollectionReport) {
     $altSectionText = '#0f513b';
     $bannerTitle = 'Insurance Officer Daily Report';
     $bannerSubtitle = 'Formal client acquisition, policy administration and claims operations summary';
+} elseif ($isMarketingReport) {
+    $primaryColor = '#9a3412';
+    $primarySoftBg = '#fff7ed';
+    $primarySoftBorder = '#fed7aa';
+    $primarySoftText = '#9a3412';
+    $altSectionBg = '#ffedd5';
+    $altSectionText = '#7c2d12';
+    $bannerTitle = 'Marketing Officer Daily Report';
+    $bannerSubtitle = 'Formal lead generation, campaign outreach and market feedback summary';
 } else {
     $primaryColor = '#0f4c81';
     $primarySoftBg = '#eef5fb';

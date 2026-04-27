@@ -51,6 +51,7 @@
                                     <option value="credit"     <?php echo ($filter_type === 'credit')     ? 'selected' : ''; ?>>Credit Officer</option>
                                     <option value="insurance"  <?php echo ($filter_type === 'insurance')  ? 'selected' : ''; ?>>Insurance Officer</option>
                                     <option value="collection" <?php echo ($filter_type === 'collection') ? 'selected' : ''; ?>>Collection Officer</option>
+                                    <option value="marketing"  <?php echo ($filter_type === 'marketing')  ? 'selected' : ''; ?>>Marketing Officer</option>
                                 </select>
                             </div>
                             <div class="mb-2">
@@ -71,14 +72,16 @@
                         $active_credit     = ($filter_type === 'all' || $filter_type === 'credit')     ? 'active' : '';
                         $active_insurance  = ($filter_type === 'insurance')                            ? 'active' : '';
                         $active_collection = ($filter_type === 'collection')                           ? 'active' : '';
+                        $active_marketing  = ($filter_type === 'marketing')                            ? 'active' : '';
                         if ($filter_type === 'all') {
-                            $active_credit = 'active'; $active_insurance = ''; $active_collection = '';
+                            $active_credit = 'active'; $active_insurance = ''; $active_collection = ''; $active_marketing = '';
                         }
                         ?>
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item"><a class="nav-link <?php echo $active_credit; ?>" data-toggle="tab" href="#credit_reports_tab">Credit Officer Report</a></li>
                             <li class="nav-item"><a class="nav-link <?php echo $active_insurance; ?>" data-toggle="tab" href="#insurance_reports_tab">Insurance Officer Report</a></li>
                             <li class="nav-item"><a class="nav-link <?php echo $active_collection; ?>" data-toggle="tab" href="#collection_reports_tab">Collection Officer Report</a></li>
+                            <li class="nav-item"><a class="nav-link <?php echo $active_marketing; ?>" data-toggle="tab" href="#marketing_reports_tab">Marketing Officer Report</a></li>
                         </ul>
                         <div class="tab-content m-t-15">
                             <div class="tab-pane <?php echo $active_credit; ?>" id="credit_reports_tab" role="tabpanel">
@@ -189,6 +192,44 @@
                                             <?php else: ?>
                                                 <tr>
                                                     <td colspan="6" class="text-center">No collection officer reports found.</td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane <?php echo $active_marketing; ?>" id="marketing_reports_tab" role="tabpanel">
+                                <h4>Marketing Officer Report</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-hover j-basic-example dataTable table-custom">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Officer Name</th>
+                                                <th>Branch</th>
+                                                <th>Title</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (!empty($marketing_reports)): ?>
+                                                <?php foreach ($marketing_reports as $index => $report): ?>
+                                                    <tr>
+                                                        <td><?php echo $index + 1; ?></td>
+                                                        <td><?php echo htmlspecialchars($report->empl_name ?: 'N/A'); ?></td>
+                                                        <td><?php echo htmlspecialchars($report->blanch_name ?: 'N/A'); ?></td>
+                                                        <td><?php echo htmlspecialchars($report->report_title); ?></td>
+                                                        <td><?php echo htmlspecialchars($report->report_date); ?></td>
+                                                        <td>
+                                                            <a href="<?php echo base_url('admin/marketing_daily_report_view/' . $report->report_id); ?>" class="btn btn-sm btn-info">View</a>
+                                                            <a href="<?php echo base_url('admin/marketing_daily_report_download/' . $report->report_id); ?>" class="btn btn-sm btn-primary" target="_blank">Download</a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <td colspan="6" class="text-center">No marketing officer reports found.</td>
                                                 </tr>
                                             <?php endif; ?>
                                         </tbody>

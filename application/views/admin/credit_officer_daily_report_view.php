@@ -5,12 +5,13 @@
 $reportTitle = (string) ($report->report_title ?? '');
 $isInsuranceReport = stripos($reportTitle, 'INSURANCE') !== false;
 $isCollectionReport = stripos($reportTitle, 'COLLECTION') !== false;
+$isMarketingReport = stripos($reportTitle, 'MARKETING') !== false;
 $reportsLabel = $isCollectionReport
     ? 'COLLECTION OFFICER - DAILY REPORTS'
-    : ($isInsuranceReport ? 'INSURANCE OFFICER - DAILY REPORTS' : 'CREDIT OFFICER - DAILY REPORTS');
+    : ($isInsuranceReport ? 'INSURANCE OFFICER - DAILY REPORTS' : ($isMarketingReport ? 'MARKETING OFFICER - DAILY REPORTS' : 'CREDIT OFFICER - DAILY REPORTS'));
 $downloadPath = $isCollectionReport
     ? 'admin/collection_daily_report_download/' . $report->report_id
-    : ($isInsuranceReport ? 'admin/insurance_daily_report_download/' . $report->report_id : 'admin/officer_daily_report_download/' . $report->report_id);
+    : ($isInsuranceReport ? 'admin/insurance_daily_report_download/' . $report->report_id : ($isMarketingReport ? 'admin/marketing_daily_report_download/' . $report->report_id : 'admin/officer_daily_report_download/' . $report->report_id));
 ?>
 
 <div id="main-content">
